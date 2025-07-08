@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document</title>
+  <style>
+    table {
+      color: black;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    div {
+      background-color: black;
+      color: white;
+      padding: 10px;
+    }
+    h1 {
+      float: right;
+      color: white;
+      margin-right: 20px;
+    }
+    footer {
+      text-align: center;
+      background-color: black;
+      color: white;
+      margin-top: 400px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjxgPaTk566096PFj8DYACe0KDAqLOLYCr_Q&s" width="50px" height="50px" alt="logo"/>
+    <h1>PRODUCTO</h1><br><br>
+    <a href="Home.html" target="Home" style="color: white;">Home</a>
+    <a href="Products.html" style="color: white;">Products</a>
+    <a href="About.html" style="color: white;">About</a>
+  </div>
+
+  <h2 style="color: black;">Product Form</h2>
+
+  <form id="productForm">
+    <input type="number" id="PID" name="PID" placeholder="Product ID" required>
+    <input type="text" id="PName" name="PName" placeholder="Product Name" required>
+    <input type="number" id="Price" name="Price" placeholder="Price" required>
+    <input type="number" id="Quan" name="Quan" placeholder="Quantity" required>
+    <input type="submit" id="submitBtn" value="Add Product"><br><br>
+  </form>
+
+  <button onclick="displayProducts()">Display Products</button><br><br>
+
+  <table id="productTable">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Actions</th>
+    </tr>
+  </table>
+
+  <footer>
+    &copy; 2025 PRODUCTO Inc.
+  </footer>
+
+  <script>
+    const products = [];
+    let editIndex = -1;
+
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('PID').value;
+      const name = document.getElementById('PName').value;
+      const price = document.getElementById('Price').value;
+      const quantity = document.getElementById('Quan').value;
+      const product = { id, name, price, quantity };
+
+      if (editIndex === -1) {
+        products.push(product); // add new product
+      } else {
+        products[editIndex] = product; // update existing product
+        editIndex = -1;
+        document.getElementById('submitBtn').value = "Add Product";
+      }
+
+      document.getElementById('productForm').reset();
+      displayProducts();
+    });
+
+    function displayProducts() {
+      const table = document.getElementById('productTable');
+      while (table.rows.length > 1) {
+        table.deleteRow(1);
+      }
+      products.forEach((product, index) => {
+        const row = table.insertRow();
+        row.innerHTML = `
+          <td>${product.id}</td>
+          <td>${product.name}</td>
+          <td>${product.price}</td>
+          <td>${product.quantity}</td>
+          <td>
+            <button onclick="updateProduct(${index})">Update</button>
+            <button onclick="deleteRow(${index})">Delete</button>
+          </td>
+        `;
+      });
+    }
+
+    function deleteRow(index) {
+      products.splice(index, 1);
+      displayProducts();
+    }
+
+    function updateProduct(index) {
+      const product = products[index];
+      document.getElementById('PID').value = product.id;
+      document.getElementById('PName').value = product.name;
+      document.getElementById('Price').value = product.price;
+      document.getElementById('Quan').value = product.quantity;
+      editIndex = index;
+      document.getElementById('submitBtn').value = "Update Product";
+    }
+  </script>
+</body>
+</html>
